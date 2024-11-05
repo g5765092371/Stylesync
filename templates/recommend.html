@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服装搭配推荐</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            width: 70%;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+        }
+        .btn-submit {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-submit:hover {
+            background-color: #0056b3;
+        }
+        .submitted-data {
+            margin-top: 30px;
+        }
+        .submitted-data h3 {
+            text-align: center;
+        }
+        .data-display {
+            background-color: #f4f4f4;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .data-display p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>服装搭配推荐系统</h1>
+
+        <form id="recommendation-form">
+            <div class="form-group">
+                <label for="height">身高 (cm):</label>
+                <input type="number" id="height" name="height" required>
+            </div>
+            <div class="form-group">
+                <label for="weight">体重 (kg):</label>
+                <input type="number" id="weight" name="weight" required>
+            </div>
+            <div class="form-group">
+                <label for="setting">场合:</label>
+                <input type="text" id="setting" name="setting" required>
+            </div>
+            <div class="form-group">
+                <label for="weather">天气:</label>
+                <input type="text" id="weather" name="weather" required>
+            </div>
+            <div class="form-group">
+                <label for="type">风格:</label>
+                <input type="text" id="type" name="type" required>
+            </div>
+
+            <button type="submit" class="btn-submit">提交数据</button>
+        </form>
+
+        <div class="submitted-data" id="submitted-data">
+            <h3>提交的数据：</h3>
+            <div id="data-display" class="data-display">
+                <!-- 提交的数据显示在这里 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // 获取 CSRF 令牌
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    document.getElementById('recommendation-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const data = {
+            height: formData.get('height'),
+            weight: formData.get('weight'),
+            setting: formData.get('setting'),
+            weather: formData.get('weather'),
+            type: formData.get('type')
+        };
+
+        // 发送数据到服务器
+        fetch('/recommend/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')  // 获取并传递 CSRF 令牌
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 显示提交的数据
+            const dataDisplay = document.getElementById('data-display');
+            dataDisplay.innerHTML = `
+                <p><strong>身高:</strong> ${data.height} cm</p>
+                <p><strong>体重:</strong> ${data.weight} kg</p>
+                <p><strong>场合:</strong> ${data.setting}</p>
+                <p><strong>天气:</strong> ${data.weather}</p>
+                <p><strong>风格:</strong> ${data.type}</p>
+            `;
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    </script>
+</body>
+</html>

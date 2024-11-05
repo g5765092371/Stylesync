@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时尚搭配助手</title>
+    <style>
+        body, html {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        h1 {
+            color: #4a4a4a;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="file"], input[type="text"], input[type="submit"] {
+            padding: 12px;
+            font-size: 16px;
+            width: 100%;
+            border: 1px solid #e1e1e1;
+            border-radius: 3px;
+            transition: border-color 0.3s ease;
+        }
+        input[type="file"]:hover, input[type="text"]:hover, input[type="submit"]:hover {
+            border-color: #c1c1c1;
+        }
+        input[type="file"]:focus, input[type="text"]:focus, input[type="submit"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        .img-preview {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .img-preview img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .output {
+            margin-top: 20px;
+            background-color: #f4f4f4;
+            padding: 20px;
+            border-radius: 5px;
+            word-wrap: break-word;
+        }
+        @media (max-width: 600px) {
+            .container {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>时尚搭配助手</h1>
+        <div class="form-group">
+            <label for="image-upload">选择服装图片:</label>
+            <input type="file" id="image-upload" accept="image/*" onchange="previewImage(event)">
+        </div>
+        <div class="img-preview" id="img-preview">
+            <p>没有图片</p>
+        </div>
+        <div class="form-group">
+            <label for="clothing-color">衣服颜色:</label>
+            <input type="text" id="clothing-color" placeholder="例如：红色">
+        </div>
+        <div class="form-group">
+            <label for="clothing-style">衣服风格:</label>
+            <input type="text" id="clothing-style" placeholder="例如：休闲">
+        </div>
+        <div class="form-group">
+            <label for="occasion">场合:</label>
+            <input type="text" id="occasion" placeholder="例如：日常、晚宴">
+        </div>
+        <div class="form-group">
+            <input type="submit" value="获取搭配建议" onclick="submitData()">
+        </div>
+        <div class="output" id="output">
+            <h3>搭配建议:</h3>
+            <p id="result">等待您的选择...</p>
+        </div>
+    </div>
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function() {
+                const preview = document.getElementById('img-preview');
+                preview.innerHTML = '<img src="' + reader.result + '" alt="服装图片">';
+            };
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+        function submitData() {
+            const color = document.getElementById('clothing-color').value;
+            const style = document.getElementById('clothing-style').value;
+            const occasion = document.getElementById('occasion').value;
+            if (!color || !style || !occasion) {
+                alert('请填写所有字段！');
+                return;
+            }
+            document.getElementById('result').textContent = `您选择的搭配信息如下：\n\n颜色: ${color}\n风格: ${style}\n场合: ${occasion}`;
+            setTimeout(() => {
+                const fittedResult = `根据您选择的颜色“${color}”、风格“${style}”和场合“${occasion}”，推荐的搭配如下：\n搭配建议：上衣：白色T恤，下身：蓝色牛仔裤。`;
+                document.getElementById('result').textContent += '\n\n' + fittedResult;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
