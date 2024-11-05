@@ -1,5 +1,5 @@
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from style.models import personstyle
 import logging
@@ -14,6 +14,19 @@ def index1(request):
 def recommend(request):
     context = {'wyb': 'gw'}
     return render(request, 'recommend.html', context)
+
+def search_form(request):
+    return render(request, 'search_form.html')
+
+
+# 接收请求数据
+def search(request):
+    request.encoding = 'utf-8'
+    if 'q' in request.GET and request.GET['q']:
+        message = '你搜索的内容为: ' + request.GET['q']
+    else:
+        message = '你提交了空表单'
+    return HttpResponse(message)
 
 # def recommend(request):
 #     if request.method == 'POST':

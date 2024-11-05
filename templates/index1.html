@@ -68,6 +68,24 @@
             border-radius: 5px;
             word-wrap: break-word;
         }
+        .navigation-button {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 20px;
+            font-size: 16px;
+            width: 200px;
+            border: none;
+            border-radius: 3px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .navigation-button:hover {
+            background-color: #0056b3;
+        }
         @media (max-width: 600px) {
             .container {
                 width: 100%;
@@ -105,6 +123,7 @@
             <h3>搭配建议:</h3>
             <p id="result">等待您的选择...</p>
         </div>
+        <a href="recommend.html" class="navigation-button">进入推荐页面</a>
     </div>
     <script>
         function previewImage(event) {
